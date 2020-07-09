@@ -30,18 +30,21 @@
                     styleClass="table table-grid table-own-bordered">
                     <template slot="table-row" slot-scope="props">
                       <span v-if="props.column.field === 'display_name'">{{ props.row.display_name }}</span>
-                      <span v-if="props.column.field === 'lastlogin'" :title="props.row.lastlogin" v-tippy="{ arrow : true,  animation : 'shift-away'}">
+                      <span v-if="props.column.field === 'lastlogin'" :title="props.row.lastlogin"
+                            v-tippy="{ arrow : true,  animation : 'shift-away'}">
                         {{ convertTime(props.row.lastlogin) }}
                       </span>
-                      <span v-if="props.column.field === 'trigger_token'" :title="props.row.trigger_token" v-tippy="{ arrow : true,  animation : 'shift-away'}">
+                      <span v-if="props.column.field === 'trigger_token'" :title="props.row.trigger_token"
+                            v-tippy="{ arrow : true,  animation : 'shift-away'}">
                         {{ props.row.trigger_token }}
                       </span>
                       <span v-if="props.column.field === 'action'">
                         <a v-on:click="editUserModal(props.row)" style="margin-right: 5px;"><i class="fa fa-edit"
-                                                                    style="color: whitesmoke;"></i></a>
+                                                                                               style="color: whitesmoke;"></i></a>
                         <a v-on:click="resetTriggerTokenModal(props.row)" v-if="props.row.username === 'auto'">
                                                                 <i class="fa fa-sliders" style="color: whitesmoke;"></i></a>
-                        <a v-on:click="deleteUserModal(props.row)" v-if="props.row.username !== session.username && props.row.username !== 'auto'"><i
+                        <a v-on:click="deleteUserModal(props.row)"
+                           v-if="props.row.username !== session.username && props.row.username !== 'auto'"><i
                           class="fa fa-trash" style="color: whitesmoke;"></i></a>
                       </span>
                     </template>
@@ -95,9 +98,10 @@
                       </span>
                       <span v-if="props.column.field === 'action'">
                         <a v-on:click="editPipelineModal(props.row)" style="margin-right: 5px;"><i class="fa fa-edit"
-                                                                        style="color: whitesmoke;"></i></a>
-                        <a v-on:click="resetPipelineTriggerTokenModal(props.row)" style="margin-right: 5px;"><i class="fa fa-sliders"
-                                                                        style="color: whitesmoke;"></i></a>
+                                                                                                   style="color: whitesmoke;"></i></a>
+                        <a v-on:click="resetPipelineTriggerTokenModal(props.row)" style="margin-right: 5px;"><i
+                          class="fa fa-sliders"
+                          style="color: whitesmoke;"></i></a>
                         <a v-on:click="deletePipelineModal(props.row)"><i class="fa fa-trash"
                                                                           style="color: whitesmoke;"></i></a>
                       </span>
@@ -250,6 +254,17 @@
                 </p>
               </div>
             </collapse-item>
+            <collapse-item title="Permissions" selected>
+              <div class="user-modal-content">
+                <p class="control has-icons-left" style="padding-bottom: 5px;">
+                <div class="select is-fullwidth">
+                  <select v-model="selectUser.role">
+                    <option v-for="role in rbacRoles" :key="role" :value="role">{{ role }}</option>
+                  </select>
+                </div>
+                </p>
+              </div>
+            </collapse-item>
           </collapse>
           <div class="modal-footer">
             <div style="float: left;">
@@ -306,7 +321,7 @@
     </modal>
 
     <!-- reset trigger token modal -->
-   <modal :visible="showResetPipelineTriggerTokenModal" class="modal-z-index" @close="close">
+    <modal :visible="showResetPipelineTriggerTokenModal" class="modal-z-index" @close="close">
       <div class="box pipeline-modal">
         <div class="block pipeline-modal-content">
           <collapse accordion is-fullwidth>
@@ -453,7 +468,8 @@ export default {
       showEditPipelineModal: false,
       showResetPipelineTriggerTokenModal: false,
       showDeletePipelineModal: false,
-      pipelinePeriodicSchedules: ''
+      pipelinePeriodicSchedules: '',
+      rbacRoles: []
     }
   },
 
@@ -488,6 +504,15 @@ export default {
             this.pipelineRows = response.data
           } else {
             this.pipelineRows = []
+          }
+        }).catch((error) => {
+          this.$onError(error)
+        })
+      this.$http
+        .get('/api/v1/rbac/roles', { params: { hideProgressBar: true } })
+        .then(response => {
+          if (response.data) {
+            this.rbacRoles = response.data
           }
         }).catch((error) => {
           this.$onError(error)

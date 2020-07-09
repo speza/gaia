@@ -182,8 +182,12 @@ func (e *enforcerService) GetRoleAttachedUsers(role string) ([]string, error) {
 
 // AttachRole attaches a role to a user.
 func (e *enforcerService) AttachRole(username string, role string) error {
-	if _, err := e.enforcer.AddRoleForUser(username, role); err != nil {
+	added, err := e.enforcer.AddRoleForUser(username, role)
+	if err != nil {
 		return fmt.Errorf("error attatching role to user: %w", err)
+	}
+	if !added {
+		return errors.New("attaching the role was unsuccessful")
 	}
 	return nil
 }
