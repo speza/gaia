@@ -65,5 +65,5 @@ func (h *settingsHandler) rbacGet(c echo.Context) error {
 		response.Enabled = settings.RBACEnabled
 	}
 
-	return c.JSON(http.StatusOK, rbacGetResponse{Enabled: settings.RBACEnabled})
+	return c.JSON(http.StatusOK, response)
 }

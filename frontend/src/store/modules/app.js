@@ -11,6 +11,9 @@ const state = {
   },
   effect: {
     translate3d: true
+  },
+  settings: {
+    rbacEnabled: false
   }
 }
 
@@ -36,6 +39,10 @@ const mutations = {
     for (let name in effectItem) {
       state.effect[name] = effectItem[name]
     }
+  },
+
+  [types.SET_SETTINGS_RBAC] (state, value) {
+    state.settings.rbacEnabled = value
   }
 }
 

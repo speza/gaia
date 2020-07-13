@@ -254,15 +254,14 @@
                 </p>
               </div>
             </collapse-item>
-            <collapse-item title="Permissions" selected>
+            <collapse-item v-if="settings.rbacEnabled" title="Permissions" selected>
               <div class="user-modal-content">
-                <p class="control has-icons-left" style="padding-bottom: 5px;">
+                <p class="control has-icons-left" style="padding-bottom: 5px;">Select a role for the new user:</p>
                 <div class="select is-fullwidth">
                   <select v-model="selectUser.role">
                     <option v-for="role in rbacRoles" :key="role" :value="role">{{ role }}</option>
                   </select>
                 </div>
-                </p>
               </div>
             </collapse-item>
           </collapse>
@@ -482,7 +481,8 @@ export default {
   },
 
   computed: mapGetters({
-    session: 'session'
+    session: 'session',
+    settings: 'settings'
   }),
 
   methods: {

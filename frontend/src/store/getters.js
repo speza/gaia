@@ -6,6 +6,7 @@ const effect = state => state.app.effect
 const menuitems = state => state.menu.items
 const session = state => state.session
 const intervals = state => state.intervals
+const settings = state => state.app.settings
 
 export {
   pkg,
@@ -15,5 +16,6 @@ export {
   effect,
   menuitems,
   session,
-  intervals
+  intervals,
+  settings
 }
